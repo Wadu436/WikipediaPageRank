@@ -59,7 +59,7 @@ namespace WikipediaPageRank
                         updatedPageRankDictionary[t] += dampingFactor * pagerankDictionary[f.Key] * percentagePerLink; //Verdeel de PageRank over alle naar verwezen pagina's
                     }
                 }
-                else //Als de pagina nier naar een andere verwijst
+                else //Als de pagina niet naar een andere verwijst
                 {
                     deadEndPR += pagerankDictionary[f.Key]; //Voeg de PR toe aan PR van alle doodlopende pagina's
                 }

@@ -18,10 +18,10 @@ namespace WikipediaPageRank
 
             if(title == "")
             {
-                title = "PageRank";
+                title = "Larry Page";
             }
 
-            WikipediaCrawler crawler = new WikipediaCrawler(); //Vindt alle pagina's op Wikipedia met hun links
+            WikipediaCrawler crawler = new WikipediaCrawler(); //Vind alle pagina's op Wikipedia met hun links
             crawler.Crawl(title, 0);
 
             crawler.SanitizeDictionary(); //Kuis alle links op die naar een pagina verwijzen die we niet gevonden hebben.
@@ -39,26 +39,31 @@ namespace WikipediaPageRank
             List<string> sortedTitles = prSort.QuickSort(); //Sorteer de PageRank waarden
 
             //Geef de PageRank weer in een Excel bestand
-            Excel.Application excelPagerank = new Excel.Application() { Visible = false };  
+            Excel.Application excelPagerank = new Excel.Application() { Visible = true, ScreenUpdating = false };
             Excel.Workbook ePRWorkbook = excelPagerank.Workbooks.Add();
             Excel.Worksheet ePRWorksheet = ePRWorkbook.ActiveSheet;
 
             ePRWorksheet.Cells[1, 1] = "Page Name";
             ePRWorksheet.Cells[1, 2] = "PageRank";
+            ePRWorksheet.Cells[1, 4] = "Page Name";
+            ePRWorksheet.Cells[1, 5] = "PageRank";
 
-            int i = 2;
-            foreach (string p in sortedTitles)
+
+            for (int j = 0; j < 10000 && j < sortedTitles.Count / 2; j++)
             {
-                ePRWorksheet.Cells[i, 1] = p;
-                ePRWorksheet.Cells[i, 2] = pagerankDictionary[p];
-                i++;
+                string p = sortedTitles[j];
+                ePRWorksheet.Cells[j+2, 1] = p;
+                ePRWorksheet.Cells[j+2, 2] = pagerankDictionary[p];
+
+                p = sortedTitles[sortedTitles.Count - 1 - j];
+                ePRWorksheet.Cells[j + 2, 4] = p;
+                ePRWorksheet.Cells[j + 2, 5] = pagerankDictionary[p];
             }
 
             ePRWorksheet.Range["A1", "B1"].EntireColumn.AutoFit();
-
-            Console.WriteLine("Opening Excel...");
+            ePRWorksheet.Range["D1", "E1"].EntireColumn.AutoFit();
             excelPagerank.Visible = true;
-
+            excelPagerank.ScreenUpdating = true;
             Console.ReadKey();
         }
     }
